@@ -10,6 +10,8 @@ import { createConsoleReader } from "./helpers/reader.js";
 // image tools
 import { GetImageDescriptionTool } from "./tools/getImageDescription.js";
 import { GetImageInfoFlickrTool } from "./tools/getImageInfoFlickr.js";
+import { ImageViewerTool } from "./tools/imageViewerTool.js";
+import { SearchImagesFlickrTool } from "./tools/searchImageFlickr.js";
 
 const llm = getChatLLM();
 const agent = new BeeAgent({
@@ -20,6 +22,8 @@ const agent = new BeeAgent({
     new DuckDuckGoSearchTool(),
     new GetImageInfoFlickrTool(),
     new GetImageDescriptionTool(),
+    new SearchImagesFlickrTool(),
+    new ImageViewerTool(),
   ],
 });
 
