@@ -8,7 +8,7 @@ The workflow first searches for an image from Flickr, using an `id` parameter. I
 
 Here is an example flow using [this](https://www.flickr.com/photos/jennthulhu_photog/54283177907/) image with `id=54283177907`:
 
-```bash
+```
 User 👤 : Get me the image with id: 54283177907 from Flickr, and please describe its contents
 Agent 🤖 (thought) : The user wants to get an image from Flickr and describe its contents, I can use the GetImageInfoFlickrTool function to get the image URL and then use the GetImageDescriptionTool function to describe the image.
 Agent 🤖 (tool_name) : GetImageInfoFlickrTool
@@ -52,4 +52,8 @@ Run the agent:
 
 ```bash
 npm run start src/agent.ts <<< "Get me the image with id: 54283177907 from Flickr, and please describe its contents"
+```
+
+```bash
+npm run start src/agent.ts <<< "Get me some images from Flickr that show waves crashing on a shore"
 ```
