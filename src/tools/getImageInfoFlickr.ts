@@ -20,7 +20,7 @@ const { flickr } = createFlickr(apiKey);
 
 export class GetImageInfoFlickrTool extends Tool<StringToolOutput> {
   name = "GetImageInfoFlickrTool";
-  description = "It generates a random puzzle to test your knowledge.";
+  description = "Retrieves an image from Flickr.";
 
   public readonly emitter: ToolEmitter<ToolInput<this>, StringToolOutput> = Emitter.root.child({
     namespace: ["tool", "getimageinfoflickrtool"],
@@ -46,7 +46,9 @@ export class GetImageInfoFlickrTool extends Tool<StringToolOutput> {
     const imageUrl = `https://farm${photoInfo.farm}.staticflickr.com/${photoInfo.server}/${photoInfo.id}_${photoInfo.secret}.jpg`;
 
     if (!imageUrl) {
-      throw new ToolInputValidationError(`Riddle with such index (${imageUrl}) does not exist!`);
+      throw new ToolInputValidationError(
+        `Unable to find image with url: (${imageUrl}). Response object was: (${JSON.stringify(res, null, 2)})`,
+      );
     }
 
     return new StringToolOutput(imageUrl);
