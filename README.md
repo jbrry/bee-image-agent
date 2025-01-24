@@ -1,77 +1,55 @@
-# 🐝 Bee Agent Framework Starter
+# 🐝 Bee Image Agent Example
 
-This starter template lets you quickly start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
+This Agent is based on the [Bee Agent Framework Starter](https://github.com/i-am-bee/bee-agent-framework-starter).
 
-📚 See the [documentation](https://i-am-bee.github.io/bee-agent-framework/) to learn more.
+It is extended to showcase image-processing capabilities through the [IBM watsonx.ai Node.js SDK](https://github.com/IBM/watsonx-ai-node-sdk).
 
-## ✨ Key Features
+The workflow first searches for an image from Flickr, using an `id` parameter. It then retrieves the URL and passes the URL and an accompanying question to a hosted model on WatsonX that is capable of handling image/text inputs, for example `meta-llama/llama-3-2-11b-vision-instruct`.
 
-- 🔒 Safely execute an arbitrary Python Code via [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter).
-- 🔎 Get complete visibility into agents' decisions using our MLFlow integration thanks to [Bee Observe](https://github.com/i-am-bee/bee-observe).
-- 🚀 Fully fledged TypeScript project setup with linting and formatting.
+Here is an example flow using [this](https://www.flickr.com/photos/jennthulhu_photog/54283177907/) image with `id=54283177907`:
 
-## 📦 Requirements
+```bash
+User 👤 : Get me the image with id: 54283177907 from Flickr, and please describe its contents
+Agent 🤖 (thought) : The user wants to get an image from Flickr and describe its contents, I can use the GetImageInfoFlickrTool function to get the image URL and then use the GetImageDescriptionTool function to describe the image.
+Agent 🤖 (tool_name) : GetImageInfoFlickrTool
+Agent 🤖 (tool_input) : {"id": "54283177907"}
+Agent 🤖 (tool_output) : https://farm66.staticflickr.com/65535/54283177907_8359857afb.jpg
+Agent 🤖 (thought) : Now that I have the image URL, I can use the GetImageDescriptionTool function to describe the image.
+Agent 🤖 (tool_name) : GetImageDescriptionTool
+Agent 🤖 (tool_input) : {"image_url":"https://farm66.staticflickr.com/65535/54283177907_8359857afb.jpg","question":"Describe the image"}
+Agent 🤖 (tool_output) : The image shows a photo of a professional ice hockey game in progress.
 
-- JavaScript runtime [NodeJS > 18](https://nodejs.org/) (ideally installed via [nvm](https://github.com/nvm-sh/nvm)).
-- Container system like [Rancher Desktop](https://rancherdesktop.io/), [Podman](https://podman.io/) (VM must be rootfull machine) or [Docker](https://www.docker.com/).
-- LLM Provider either external [WatsonX](https://www.ibm.com/watsonx) (OpenAI, Groq, ...) or local [ollama](https://ollama.com).
+*   A player wearing a black uniform with the number 51 on his left sleeve runs across the ice with his left foot forward.
+    *   His uniform consists of a black helmet, black top with teal and red accents, black pants with teal and red accents, black socks with teal and red stripes, and black shin guards. He also wears black skates and black gloves.
+    *   The player extends his left leg forwards in mid-stride.
+    *   His lower right leg appears blurred due to being in motion.
+*   Behind him, two other players are engaged in the game.
+    *   On the right, a player wears a white helmet and respectively themed top, pants, and gloves with the letters "CAPS" on his sleeves holding a hockey stick;
+    *   On the left, a player in a matching top and pants uniform, but wearing a goalkeeping helmet, is obscured by and behind the man in blacks body and striking out with their left arm.
+*   The background shows a crowd watching the game from the stands.
+    *   Behind the crowd is a metallic fence wall with advertisements behind it.
+    *   Furthermore down, there is a yellow line along which the crowd sits, before the ice sheet.
 
-## 🛠️ Getting started
+This image depicts the intensity and action of an ice hockey game in progress.
 
-1. Clone this repository or [use it as a template](https://github.com/new?template_name=bee-agent-framework-starter&template_owner=i-am-bee).
-2. Install dependencies `npm ci`.
-3. Configure your project by filling in missing values in the `.env` file (default LLM provider is locally hosted `Ollama`).
-4. Run the agent `npm run start src/agent.ts`
+Agent 🤖 (thought) : I have the image description, now I can provide the final answer.
+Agent 🤖 (final_answer) : The image with id: 54283177907 from Flickr is a photo of a professional ice hockey game in progress. A player wearing a black uniform with the number 51 on his left sleeve runs across the ice with his left foot forward. Behind him, two other players are engaged in the game. The background shows a crowd watching the game from the stands.
+Agent 🤖 : The image with id: 54283177907 from Flickr is a photo of a professional ice hockey game in progress. A player wearing a black uniform with the number 51 on his left sleeve runs across the ice with his left foot forward. Behind him, two other players are engaged in the game. The background shows a crowd watching the game from the stands.
+```
 
-To run an agent with a custom prompt, simply do this `npm run start src/agent.ts <<< 'Hello Bee!'`
+## Prerequisites
 
-🧪 More examples can be found [here](https://github.com/i-am-bee/bee-agent-framework/blob/main/examples).
+Obtain an API key for Flickr [here](https://www.flickr.com/services/apps/create/).
+Obtain Watsonx credentials (see `.env.template` for the parameters that are necessary).
 
-> [!TIP]
->
-> To use Bee agent with [Python Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) refer to the [Code Interpreter](#code-interpreter) section.
+Install necessary packages:
 
-> [!TIP]
->
-> To use Bee agent with [Bee Observe](https://github.com/i-am-bee/bee-observe) refer to the [Observability](#observability) section.
+```bash
+npm install
+```
 
-## 🏗 Infrastructure
+Run the agent:
 
-> [!NOTE]
->
-> Docker distribution with support for _compose_ is required, the following are supported:
->
-> - [Docker](https://www.docker.com/)
-> - [Rancher](https://www.rancher.com/) - macOS users may want to use VZ instead of QEMU
-> - [Podman](https://podman.io/) - requires [compose](https://podman-desktop.io/docs/compose/setting-up-compose) and **rootful machine** (if your current machine is rootless, please create a new one, also ensure you have enabled Docker compatibility mode).
-
-## 🔒Code interpreter
-
-The [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) is a gRPC service that an agent uses to execute an arbitrary Python code safely.
-
-### Instructions
-
-1. Start all services related to the [`Code Interpreter`](https://github.com/i-am-bee/bee-code-interpreter) `npm run infra:start --profile=code_interpreter`
-2. Run the agent `npm run start src/agent_code_interpreter.ts`
-
-> [!NOTE]
->
-> Code Interpreter runs on `http://127.0.0.1:50081`.
-
-## 🔎 Observability
-
-Get complete visibility of the agent's inner workings via our observability stack.
-
-- The [MLFlow](https://mlflow.org/) is used as UI for observability.
-- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the observability service (API) for gathering traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework).
-- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector that sends traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) to [Bee Observe](https://github.com/i-am-bee/bee-observe).
-
-### Instructions
-
-1. Start all services related to [Bee Observe](https://github.com/i-am-bee/bee-observe) `npm run infra:start --profile=observe`
-2. Run the agent `npm run start src/agent_observe.ts`
-3. See visualized trace in MLFlow web application [`http://127.0.0.1:8080/#/experiments/0`](http://localhost:8080/#/experiments/0)
-
-> [!TIP]
->
-> Configuration file is [infra/observe/.env.docker](./infra/observe/.env.docker).
+```bash
+npm run start src/agent.ts <<< "Get me the image with id: 54283177907 from Flickr, and please describe its contents"
+```

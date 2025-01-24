@@ -51,7 +51,7 @@ export class GetImageDescriptionTool extends Tool<StringToolOutput> {
       });
 
       const modelParameters = {
-        maxTokens: 200,
+        maxTokens: 512,
       };
 
       const response = await axios.get(input.image_url, { responseType: "arraybuffer" });
