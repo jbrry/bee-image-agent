@@ -1,20 +1,29 @@
-import "dotenv/config.js";
 import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
 import { FrameworkError } from "bee-agent-framework/errors";
 import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
-import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { getChatLLM } from "./helpers/llm.js";
 import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
+import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
+import "dotenv/config.js";
+import { getChatLLM } from "./helpers/llm.js";
 import { createConsoleReader } from "./helpers/reader.js";
+
+// image tools
+import { GetImageDescriptionTool } from "./tools/getImageDescription.js";
+import { GetImageInfoFlickrTool } from "./tools/getImageInfoFlickr.js";
 
 const llm = getChatLLM();
 const agent = new BeeAgent({
   llm,
   memory: new TokenMemory({ llm }),
-  tools: [new OpenMeteoTool(), new DuckDuckGoSearchTool()],
+  tools: [
+    new OpenMeteoTool(),
+    new DuckDuckGoSearchTool(),
+    new GetImageInfoFlickrTool(),
+    new GetImageDescriptionTool(),
+  ],
 });
 
-const reader = createConsoleReader({ fallback: "What is the current weather in Las Vegas?" });
+const reader = createConsoleReader({ fallback: "What is the weather in San Francisco?" });
 for await (const { prompt } of reader) {
   try {
     const response = await agent

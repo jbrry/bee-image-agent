@@ -36,12 +36,15 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
+    "@ibm-cloud/watsonx-ai": "^1.3.0",
     "@google-cloud/vertexai": "^1.9.2",
     "@ibm-generative-ai/node-sdk": "^3.2.4",
     "@opentelemetry/sdk-node": "^0.57.0",
+    "axios": "^1.7.9",
     "bee-agent-framework": "^0.0.58",
     "bee-observe-connector": "^0.0.6",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
+    "flickr-sdk": "^7.0.0-beta.9",
     "groq-sdk": "^0.7.0",
     "ollama": "^0.5.11",
     "openai": "^4.77.0",
